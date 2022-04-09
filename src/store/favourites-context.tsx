@@ -7,11 +7,14 @@ import { Meetup } from "../classes/Meetup";
 // }
 
 const FavouritesContext = createContext({
-  favourites: [],
+  favourites: [] as Meetup[],
   totalFavourites: 0,
+  addFavourite: (favourite: Meetup) => {},
+  removeFavourite: (meetupId: string) => {},
+  itemIsFavourite: (meetupId: string): any => {},
 });
 
-function FavouritesContextProvider({ children }: { children: ReactNode }) {
+export function FavouritesContextProvider({ children }: { children: ReactNode }) {
   const [userFavourites, setUserFavourites] = useState<Meetup[]>([]);
 
   function addFavouriteHandler(favourite: Meetup) {
@@ -30,13 +33,16 @@ function FavouritesContextProvider({ children }: { children: ReactNode }) {
 
   function itemIsFavouriteHandler(meetupId: string) {
     return userFavourites.some((meetup) => {
-      meetup.id === meetupId;
+      return meetup.id === meetupId;
     });
   }
 
   const context = {
     favourites: userFavourites,
     totalFavourites: userFavourites.length,
+    addFavourite: addFavouriteHandler,
+    removeFavourite: removeFavouriteHandler,
+    itemIsFavourite: itemIsFavouriteHandler,
   };
 
   return (
@@ -46,3 +52,5 @@ function FavouritesContextProvider({ children }: { children: ReactNode }) {
     </FavouritesContext.Provider>
   );
 }
+
+export default FavouritesContext;
